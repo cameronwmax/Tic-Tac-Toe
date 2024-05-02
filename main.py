@@ -14,8 +14,6 @@ moveFont = pygame.font.Font("OpenSans-Regular.ttf", 140)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-clock = pygame.time.Clock()
-
 board = brain.initial_state()
 
 while True:
@@ -61,6 +59,6 @@ while True:
                     board[i][j] = turn
 
     pygame.display.update()
-    clock.tick(60)
+
 
 
