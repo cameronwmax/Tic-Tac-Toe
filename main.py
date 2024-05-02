@@ -1,13 +1,13 @@
 import pygame
 
+import brain
+
 # Game variables
 WIDTH = 600
 HEIGHT = 600
 black = (0, 0, 0)
 white = (255, 255, 255)
-EMPTY = None
-X = "X"
-O = "O"
+
 
 pygame.init()
 moveFont = pygame.font.Font("OpenSans-Regular.ttf", 140)
@@ -16,33 +16,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 clock = pygame.time.Clock()
 
-def initial_state():
-    return [
-        [EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY]
-    ]
-
-def return_turn():
-    if board == initial_state():
-        return X
-    
-    x_count = 0
-    o_count = 0
-
-    for i in range(3):
-        for j in range(3):
-            if board[i][j] == X:
-                x_count += 1
-            elif board[i][j] == O:
-                o_count += 1
-
-    if x_count > o_count:
-        return O
-    else:
-        return X
-
-board = initial_state()
+board = brain.initial_state()
 
 while True:
     for event in pygame.event.get():
@@ -50,17 +24,22 @@ while True:
             pygame.quit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             print(pygame.mouse.get_pos())
-    turn = return_turn()
+    # Get current turn
+    turn = brain.turn(board)
 
 
     tiles = []
     for i in range(3):
+        # Create row for each column
         row = []
         for j in range(3):
+            # Create and draw rects to screen
             rect = pygame.Rect(i * 200, j * 200, 200, 200)
             pygame.draw.rect(screen, white, rect, 3)
-
-            if board[i][j] != EMPTY:
+            
+            # If current space is not empty
+            if board[i][j] != brain.EMPTY:
+                # Draw X or O to space
                 move = moveFont.render(board[i][j], True, white)
                 moveRect = move.get_rect()
                 moveRect.center = rect.center
@@ -68,13 +47,17 @@ while True:
             row.append(rect)
         tiles.append(row)
 
-
-    click, _, _ = pygame.mouse.get_pressed()
-    if click == 1:
+    # Get users clicks
+    click = pygame.mouse.get_pressed()[0]
+    if click:
+        # Get mouse position
         mouse = pygame.mouse.get_pos()
+        # Loop in range of rows and columns
         for i in range(3):
             for j in range(3):
-                if (board[i][j] == EMPTY and tiles[i][j].collidepoint(mouse)):
+                # Check if current space is empty and if where user clickd
+                if (board[i][j] == brain.EMPTY and tiles[i][j].collidepoint(mouse)):
+                    # Update current board spot to current turn 
                     board[i][j] = turn
 
     pygame.display.update()
