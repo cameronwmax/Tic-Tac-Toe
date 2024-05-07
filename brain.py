@@ -35,7 +35,13 @@ def turn(board):
     
 def actions(board):
     """Returns set of all possible actions (i, j) available on the board"""
-    ...
+    moves = []
+    for i in range(len(board)):
+        for j in range(len(board)):
+            if board[i][j] == EMPTY:
+                moves.append((i, j))
+
+    return moves
 
 def result(board, action):
     """Returns the board that results from making move (i, j) on the board"""
@@ -65,15 +71,23 @@ def winner(board):
 
 def terminal(board):
     """Returns true if game is over, otherwise returns false"""
-    ...
+    if winner(board) == X or winner(board) == O:
+        # Returns True if X or O won the game
+        return True
+    elif winner(board) == None and len(actions(board)) == 0:
+        # Returns True if game is a tie
+        return True
+    else:
+        # Returns false if game is still going
+        return False
 
 def utility(board):
     """Returns 1 if X has won the game, -1 if O has won, 0 otherwise"""
-    if winner(board) == "X":
+    if winner(board) == X:
         return 1
-    elif winner(board) == "O":
+    elif winner(board) == O:
         return -1
-    if winner(board) == None:
+    else:
         return 0
 
 def min_value(board):
