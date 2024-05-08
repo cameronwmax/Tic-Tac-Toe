@@ -1,3 +1,6 @@
+import copy
+
+
 X = "X"
 O = "O"
 EMPTY = None
@@ -36,6 +39,7 @@ def turn(board):
 def actions(board):
     """Returns set of all possible actions (i, j) available on the board"""
     moves = []
+    # Loops through board appending empty spaces to list
     for i in range(len(board)):
         for j in range(len(board)):
             if board[i][j] == EMPTY:
@@ -45,7 +49,21 @@ def actions(board):
 
 def result(board, action):
     """Returns the board that results from making move (i, j) on the board"""
-    ...
+    if action not in actions(board):
+        # Raise exception if move is not valid
+        print(action)
+        raise Exception("Not valid action")
+    
+    # Split action into i and j
+    i, j = action
+    # Create copy of board
+    temp_board = copy.deepcopy(board)
+    # Update board copy with move
+    temp_board[i][j] = turn(board)
+
+    # Return updated board copy
+    return temp_board
+
 
 def winner(board):
     """Function to check if there is a winner"""
