@@ -1,4 +1,5 @@
 import copy
+import math
 
 
 X = "X"
@@ -108,11 +109,35 @@ def utility(board):
     else:
         return 0
 
-def min_value(board):
-    ...
 
-def max_value(board):
-    ...
+def minimax(board, alpha, beta):
+    if terminal(board):
+        return None, utility(board)
+    
+    children = actions(board)
+    best_move = children[0]
 
-def minimax(board):
-    ...
+    if turn(board) == X:
+        max_eval = -math.inf
+        for child in children:
+            board_copy = result(board, child)
+            current_eval = minimax(board_copy, alpha, beta)[1]
+            if current_eval > max_eval:
+                max_eval = current_eval
+                best_move = child
+            alpha = max(alpha, current_eval)
+            if beta <= alpha:
+                break
+        return best_move, max_eval
+    else:
+        min_eval = math.inf
+        for child in children:
+            board_copy = result(board, child)
+            current_eval = minimax(board_copy, alpha, beta)[1]
+            if current_eval < min_eval:
+                min_eval = current_eval
+                best_move = child
+            beta = min(beta, current_eval)
+            if beta <= alpha:
+                break
+        return best_move, min_eval

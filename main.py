@@ -1,13 +1,16 @@
 import pygame
-
+import time
 import brain
+import math
 
 # Game variables
 WIDTH = 600
 HEIGHT = 600
 black = (0, 0, 0)
 white = (255, 255, 255)
-
+player = brain.X
+game_state = True
+ai_turn = False
 
 pygame.init()
 moveFont = pygame.font.Font("OpenSans-Regular.ttf", 140)
@@ -16,12 +19,12 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 board = brain.initial_state()
 
-while True:
+
+
+while game_state:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            print(pygame.mouse.get_pos())
     # Get current turn
     turn = brain.turn(board)
 
@@ -45,6 +48,15 @@ while True:
             row.append(rect)
         tiles.append(row)
 
+    if brain.turn(board) != player:
+        if ai_turn:
+            time.sleep(0.5)
+            move = brain.minimax(board, -math.inf, math.inf)[0]
+            board = brain.result(board, move)
+            ai_turn = False
+        else:
+            ai_turn = True
+            
     # Get users clicks
     click = pygame.mouse.get_pressed()[0]
     if click:
@@ -57,6 +69,13 @@ while True:
                 if (board[i][j] == brain.EMPTY and tiles[i][j].collidepoint(mouse)):
                     # Update current board spot to current turn 
                     board[i][j] = turn
+
+    # Check if game is over
+    if brain.terminal(board):
+        winner = brain.winner(board)
+
+        
+
 
     pygame.display.update()
 
