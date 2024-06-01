@@ -61,7 +61,7 @@ while True:
             if ai_turn:
                 time.sleep(0.5)
                 # Get move for computer
-                move = brain.minimax(board, 8, -math.inf, math.inf)[0]
+                move = brain.minimax(board, 8, -math.inf, math.inf, True)[0]
                 # Update board with computers move
                 board = brain.result(board, move)
                 ai_turn = False

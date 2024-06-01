@@ -110,7 +110,7 @@ def utility(board):
         return 0
 
 
-def minimax(board, depth, alpha, beta):
+def minimax(board, depth, alpha, beta, maximizing_player):
     if terminal(board):
         # Return if game state is over
         return None, utility(board)
@@ -120,10 +120,10 @@ def minimax(board, depth, alpha, beta):
     best_move = children[0]
 
     if turn(board) == X:
-        max_eval = -math.inf
+        max_eval = alpha
         for child in children:
             board_copy = result(board, child)
-            current_eval = minimax(board_copy, depth - 1, alpha, beta)[1]
+            current_eval = minimax(board_copy, depth - 1, alpha, beta, False)[1]
             if current_eval > max_eval:
                 max_eval = current_eval
                 best_move = child
@@ -132,10 +132,10 @@ def minimax(board, depth, alpha, beta):
                 break
         return best_move, max_eval
     else:
-        min_eval = math.inf
+        min_eval = beta
         for child in children:
             board_copy = result(board, child)
-            current_eval = minimax(board_copy, depth - 1, alpha, beta)[1]
+            current_eval = minimax(board_copy, depth - 1, alpha, beta, True)[1]
             if current_eval < min_eval:
                 min_eval = current_eval
                 best_move = child
